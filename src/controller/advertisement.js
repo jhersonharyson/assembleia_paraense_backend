@@ -80,10 +80,27 @@ export const getAdvertisements = (req, res)=>{
 };
 
 export const postAdvertisements = (req, res)=>{
-    const newAds = req.body.advertisement;
+    const {advertisement: newAds} = req.body;
     if(newAds.length >= 2 || newAds.length === 0){
         return res.status(300).send({error: "length is not allowed"})
     }
     ads = [ newAds,...ads];
     return res.status(201).send({advertisements: ads})
+};
+
+
+export const searchAdvertisements = (req, res)=>{
+    const { search } = req.body;
+
+    if(!!search) return ads;
+
+    let filteredAdvertisement = [];
+    ads.forEach(ad =>
+        ad.forEach( advertisement =>{
+            if(advertisement.title.includes(search) || advertisement.description.includes(search) || advertisement.date.includes(search)){
+                filteredAdvertisement.push([{...advertisement, horizontal: true,}])
+            }
+        })
+    );
+    return res.status(201).send({advertisements: filteredAdvertisement})
 };
